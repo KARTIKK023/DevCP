@@ -3,6 +3,7 @@ const cors = require('cors');
 const connectDB = require('./config/database');
 const config = require('./config');
 const healthRoutes = require('./routes/health');
+const authRoutes = require('./routes/auth');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/', healthRoutes);
+app.use('/api/auth', authRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
