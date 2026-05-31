@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
 import AuthLayout from '../layouts/AuthLayout'
 import DashboardLayout from '../layouts/DashboardLayout'
+import ProtectedRoute from '../components/auth/ProtectedRoute'
+import PublicOnlyRoute from '../components/auth/PublicOnlyRoute'
 
 import Landing from '../pages/Landing'
 import Login from '../pages/Login'
@@ -22,19 +24,23 @@ export default function AppRoutes() {
         <Route index element={<Landing />} />
       </Route>
 
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+      <Route element={<PublicOnlyRoute />}>
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Route>
       </Route>
 
-      <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="repositories" element={<Repositories />} />
-        <Route path="meetings" element={<Meetings />} />
-        <Route path="architecture" element={<Architecture />} />
-        <Route path="decisions" element={<Decisions />} />
-        <Route path="deployments" element={<Deployments />} />
-        <Route path="settings" element={<Settings />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="repositories" element={<Repositories />} />
+          <Route path="meetings" element={<Meetings />} />
+          <Route path="architecture" element={<Architecture />} />
+          <Route path="decisions" element={<Decisions />} />
+          <Route path="deployments" element={<Deployments />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
       </Route>
     </Routes>
   )

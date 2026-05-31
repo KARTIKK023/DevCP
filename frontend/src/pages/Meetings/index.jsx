@@ -1,28 +1,15 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import {
-  Bell,
   Calendar,
   CalendarPlus,
-  CheckCircle2,
   ChevronDown,
   Clock,
   FileText,
-  GitBranch,
-  Hexagon,
-  Home,
-  Layers,
-  Lightbulb,
   Plus,
-  Rocket,
-  Search,
-  Settings as SettingsIcon,
-  Sparkles,
   Timer,
-  UserPlus,
   Users,
   Video,
 } from "lucide-react";
+import MeetingsAssistant from "@/components/dashboard/assistants/MeetingsAssistant";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,110 +19,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useDashboardPage } from "@/hooks/useDashboardPage";
 
 export default function Meetings() {
+  useDashboardPage({
+    title: "Meetings",
+    badge: (
+      <Badge className="border-[oklch(0.696_0.17_162.48)]/30 bg-[oklch(0.696_0.17_162.48)]/15 text-[oklch(0.696_0.17_162.48)]">
+        3 active
+      </Badge>
+    ),
+    
+    controlsClassName: "gap-4",
+    bellStyle: "plain",
+    avatarStyle: "initials-lg",
+    contentClassName: "flex flex-col flex-1 overflow-hidden",
+    layoutClassName: "min-h-0 overflow-hidden",
+    assistantVariant: "panel",
+    assistant: <MeetingsAssistant />,
+  });
+
   return (
-    <div>
-      <div className="bg-neutral-950 text-neutral-50 w-full h-fit h-fit min-h-screen w-screen min-w-screen max-w-screen overflow-visible">
-        <div className="flex w-full h-239 overflow-hidden">
-          <aside className="shrink-0 bg-neutral-900 border-white/10 border-t-0 border-r-1 border-b-0 border-l-0 border-solid flex p-4 flex-col justify-between w-64">
-            <div className="flex flex-col gap-8">
-              <div className="flex px-2 items-center gap-2">
-                <div className="size-8 rounded-lg bg-neutral-800 flex justify-center items-center">
-                  <Hexagon className="size-5 text-neutral-50" />
-                </div>
-                <Link
-                to="/dashboard"
-                className="font-semibold text-base leading-6 tracking-tight"
-                 >
-                DevSphere
-                </Link>
-              </div>
-              <nav className="flex flex-col justify-start items-stretch gap-1">
-                <a className="font-medium rounded-lg text-[#a1a1a1] text-sm leading-5 flex px-3 py-2 items-center gap-2" href="/dashboard">
-                  <Home className="size-4" />
-                  <span>Home</span>
-                </a>
-                <a className="font-medium rounded-lg text-[#a1a1a1] text-sm leading-5 flex px-3 py-2 items-center gap-2" href="/dashboard/repositories">
-                  <GitBranch className="size-4" />
-                  <span>Repositories</span>
-                </a>
-                <a className="font-medium rounded-lg bg-neutral-800 text-neutral-50 text-sm leading-5 flex px-3 py-2 items-center gap-2" href="/dashboard/meetings">
-                  <Video className="size-4" />
-                  <span>Meetings</span>
-                </a>
-                <a className="font-medium rounded-lg text-[#a1a1a1] text-sm leading-5 flex px-3 py-2 items-center gap-2" href="/dashboard/architecture">
-                  <Layers className="size-4" />
-                  <span>Architecture</span>
-                </a>
-                <a className="font-medium rounded-lg text-[#a1a1a1] text-sm leading-5 flex px-3 py-2 items-center gap-2" href="/dashboard/decisions">
-                  <CheckCircle2 className="size-4" />
-                  <span>Decisions</span>
-                </a>
-                <a className="font-medium rounded-lg text-[#a1a1a1] text-sm leading-5 flex px-3 py-2 items-center gap-2" href="/dashboard/deployments">
-                  <Rocket className="size-4" />
-                  <span>Deployments</span>
-                </a>
-                <a className="font-medium rounded-lg text-[#a1a1a1] text-sm leading-5 flex px-3 py-2 items-center gap-2" href="/dashboard/settings">
-                  <SettingsIcon className="size-4" />
-                  <span>Settings</span>
-                </a>
-              </nav>
-            </div>
-            <div className="rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <Sparkles className="size-4 text-[oklch(0.696_0.17_162.48)]" />
-                <span className="font-medium text-sm leading-5">Free plan</span>
-              </div>
-              <p className="text-[#a1a1a1] text-xs leading-4">
-                5 of 12 seats used. Upgrade for unlimited boards.
-              </p>
-              <button className="font-medium rounded-lg bg-neutral-800 text-neutral-50 text-xs leading-4 mt-1 px-3 py-2 w-full">
-                Upgrade
-              </button>
-            </div>
-          </aside>
-          <div className="flex flex-col flex-1 overflow-hidden">
-            <header className="shrink-0 border-white/10 border-t-0 border-r-0 border-b-1 border-l-0 border-solid flex px-6 justify-between items-center h-16">
-              <div className="flex items-center gap-3">
-                <h1 className="font-semibold text-lg leading-7 tracking-tight">
-                  Meetings
-                </h1>
-                <Badge className="border-[oklch(0.696_0.17_162.48)]/30 bg-[oklch(0.696_0.17_162.48)]/15 text-[oklch(0.696_0.17_162.48)]">
-                  3 active
-                </Badge>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="relative w-72">
-                  <Search className="top-1/2 size-4 -translate-y-1/2 text-[#a1a1a1] absolute left-3" />
-                  <Input
-                    className="bg-neutral-900 text-sm leading-5 border-white/10 border-0 border-solid pl-9 w-full h-9"
-                    placeholder="Search repos, meetings, decisions…"
-                  />
-                </div>
-                <button className="relative size-9 rounded-lg bg-neutral-900 border-white/10 border-1 border-solid flex justify-center items-center">
-                  <Bell className="size-4 text-[#a1a1a1]" />
-                  <span className="size-2 bg-[oklch(0.696_0.17_162.48)] rounded-full absolute right-2 top-2" />
-                </button>
-                <div className="flex items-center gap-2">
-                  <div className="size-9 font-semibold rounded-full bg-neutral-800 text-xs leading-4 flex justify-center items-center">
-                    KC
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="leading-tight font-medium text-sm leading-5">
-                      Kartik Chaudhary
-                    </span>
-                    <span className="leading-tight text-[#a1a1a1] text-xs leading-4">
-                      kartik@devsphere.io
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </header>
-            <div className="flex flex-1 overflow-hidden">
-              <main className="overflow-y-auto p-8 flex-1">
-                <div className="flex justify-between items-start">
+    <>
+<div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start">
                   <div className="flex flex-col gap-1">
                     <h2 className="font-semibold text-xl leading-7 tracking-tight">
                       All meetings
@@ -144,7 +50,7 @@ export default function Meetings() {
                       Manage and join your team meetings.
                     </p>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <button className="rounded-lg bg-neutral-900 text-[#a1a1a1] text-sm leading-5 border-white/10 border-1 border-solid flex px-3 items-center gap-2 h-9">
                       <span>Status</span>
                       <ChevronDown className="size-4" />
@@ -162,7 +68,7 @@ export default function Meetings() {
                       Active Now
                     </h3>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Card className="relative bg-neutral-900 border-white/10 border-0 border-solid p-5 gap-4">
                       <div className="border-[oklch(0.696_0.17_162.48)]/30 bg-[oklch(0.696_0.17_162.48)]/15 rounded-full border-black/1 border-1 border-solid flex absolute right-5 top-5 px-2 py-0.5 items-center gap-1.5">
                         <span className="size-1.5 animate-pulse bg-[oklch(0.696_0.17_162.48)] rounded-full" />
@@ -504,123 +410,6 @@ export default function Meetings() {
                     </div>
                   </Card>
                 </section>
-              </main>
-              <aside className="shrink-0 bg-neutral-900 border-white/10 border-t-0 border-r-0 border-b-0 border-l-1 border-solid flex flex-col w-80">
-                <div className="border-white/10 border-t-0 border-r-0 border-b-1 border-l-0 border-solid flex p-5 flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="size-4 text-[oklch(0.627_0.265_303.9)]" />
-                    <span className="font-semibold text-sm leading-5">
-                      AI Workspace Assistant
-                    </span>
-                  </div>
-                  <span className="text-[#a1a1a1] text-xs leading-4 pl-6">
-                    Synced 3m ago
-                  </span>
-                </div>
-                <div className="overflow-y-auto flex p-5 flex-col flex-1 gap-4">
-                  <Card className="bg-neutral-950 border-white/10 border-0 border-solid p-4 gap-3">
-                    <CardHeader className="p-0 flex-row items-center gap-2">
-                      <Video className="size-4 text-[oklch(0.696_0.17_162.48)]" />
-                      <CardTitle className="text-sm leading-5">
-                        Meeting Summary
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex p-0 flex-col gap-3">
-                      <p className="leading-relaxed text-[#a1a1a1] text-xs leading-4">
-                        3 active meetings, 2 upcoming today, 5 AI note sets
-                        generated this week.
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        <Badge
-                          variant="secondary"
-                          className="bg-neutral-800 text-neutral-50 text-xs leading-4"
-                        >
-                          3 active
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="bg-neutral-800 text-neutral-50 text-xs leading-4"
-                        >
-                          2 today
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="bg-neutral-800 text-neutral-50 text-xs leading-4"
-                        >
-                          5 notes
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-neutral-950 border-white/10 border-0 border-solid p-4 gap-3">
-                    <CardHeader className="p-0 flex-row items-center gap-2">
-                      <CheckCircle2 className="size-4 text-[oklch(0.488_0.243_264.376)]" />
-                      <CardTitle className="text-sm leading-5">
-                        Recent Decisions from Meetings
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex p-0 flex-col gap-3">
-                      <div className="flex gap-2">
-                        <span className="size-1.5 shrink-0 bg-[oklch(0.696_0.17_162.48)] rounded-full mt-1.5" />
-                        <div className="flex flex-col">
-                          <span className="font-medium text-xs leading-4">
-                            Use Redis caching
-                          </span>
-                          <span className="text-[#a1a1a1] text-[11px]">
-                            from API Gateway Review · 2h ago
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <span className="size-1.5 shrink-0 bg-[oklch(0.696_0.17_162.48)] rounded-full mt-1.5" />
-                        <div className="flex flex-col">
-                          <span className="font-medium text-xs leading-4">
-                            Move auth to middleware
-                          </span>
-                          <span className="text-[#a1a1a1] text-[11px]">
-                            from Frontend Sync · 5h ago
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-neutral-950 border-white/10 border-0 border-solid p-4 gap-3">
-                    <CardHeader className="p-0 flex-row items-center gap-2">
-                      <Lightbulb className="size-4 text-[oklch(0.769_0.188_70.08)]" />
-                      <CardTitle className="text-sm leading-5">
-                        Suggested Actions
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex p-0 flex-col gap-2">
-                      <button className="text-left rounded-lg bg-neutral-900 text-xs leading-4 border-white/10 border-1 border-solid flex px-3 py-2 items-center gap-2">
-                        <FileText className="size-3.5 shrink-0 text-[#a1a1a1]" />
-                        <span>Review AI notes from Backend Architecture</span>
-                      </button>
-                      <button className="text-left rounded-lg bg-neutral-900 text-xs leading-4 border-white/10 border-1 border-solid flex px-3 py-2 items-center gap-2">
-                        <CalendarPlus className="size-3.5 shrink-0 text-[#a1a1a1]" />
-                        <span>Schedule follow-up for Auth Handoff</span>
-                      </button>
-                      <button className="text-left rounded-lg bg-neutral-900 text-xs leading-4 border-white/10 border-1 border-solid flex px-3 py-2 items-center gap-2">
-                        <UserPlus className="size-3.5 shrink-0 text-[#a1a1a1]" />
-                        <span>Invite Data team to Architecture Review</span>
-                      </button>
-                    </CardContent>
-                  </Card>
-                </div>
-                <div className="border-white/10 border-t-1 border-r-0 border-b-0 border-l-0 border-solid p-4">
-                  <div className="relative">
-                    <Sparkles className="top-1/2 size-4 -translate-y-1/2 text-[#a1a1a1] absolute left-3" />
-                    <Input
-                      className="bg-neutral-950 text-sm leading-5 border-white/10 border-0 border-solid pl-9 h-10"
-                      placeholder="Ask the assistant…"
-                    />
-                  </div>
-                </div>
-              </aside>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }

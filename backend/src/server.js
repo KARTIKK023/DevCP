@@ -4,6 +4,7 @@ const connectDB = require('./config/database');
 const config = require('./config');
 const healthRoutes = require('./routes/health');
 const authRoutes = require('./routes/auth');
+const eventRoutes = require('./routes/events');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/events', eventRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

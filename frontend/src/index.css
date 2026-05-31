@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply overflow-x-hidden antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-neutral-50/40;
+  }
+}

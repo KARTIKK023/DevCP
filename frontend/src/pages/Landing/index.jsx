@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,98 +15,178 @@ import {
   Hexagon,
   Layers,
   LayoutDashboard,
+  Menu,
   NotebookPen,
   Play,
   Plus,
   Sparkles,
   Video,
+  X,
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { FallbackComponent } from "../CustomComponents";
+import { trackLandingVisit } from "@/api/analytics";
 
 export default function Landing() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    trackLandingVisit({
+      path: window.location.pathname,
+      referrer: document.referrer || null,
+    }).catch(() => {
+      // Analytics should not block the landing experience
+    });
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+  const navLinks = [
+    { label: "Repository", icon: GitBranch, active: true },
+    { label: "Meeting", icon: Video },
+    { label: "Architecture", icon: Layers },
+    { label: "Decisions", icon: CheckCircle2 },
+  ];
+
   return (
-    <div>
-      <div className="bg-neutral-950 text-neutral-50 w-full h-fit h-fit min-h-screen w-screen min-w-screen max-w-screen overflow-visible">
-        <header className="border-white/10 border-t-0 border-r-0 border-b-1 border-l-0 border-solid w-full">
-          <div className="flex px-12 py-4 justify-between items-center">
-            <div className="flex items-center gap-2">
-              <div className="size-7 rounded-lg bg-neutral-200 text-neutral-900 flex justify-center items-center">
+    <div className="bg-neutral-950 text-neutral-50 min-h-dvh w-full overflow-x-hidden">
+        <header className="sticky top-0 z-40 border-white/10 border-b bg-neutral-950/95 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80 w-full">
+          <div className="mx-auto max-w-7xl flex px-4 sm:px-6 lg:px-12 py-3 sm:py-4 justify-between items-center gap-4">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="size-7 shrink-0 rounded-lg bg-neutral-200 text-neutral-900 flex justify-center items-center">
                 <Hexagon className="size-4" />
               </div>
               <Link
                 to="/"
-                className="font-semibold text-base leading-6 tracking-tight"
-                 >
+                className="font-semibold text-base leading-6 tracking-tight truncate"
+              >
                 DevSphere
-                </Link>
+              </Link>
             </div>
-            <nav className="flex items-center gap-8">
-              <a className="font-medium text-neutral-50 text-sm leading-5 border-neutral-50 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2">
-                <GitBranch className="size-4" />
-                Repository
-              </a>
-              <a className="border-transparent font-medium text-[#a1a1a1] text-sm leading-5 border-black/1 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2">
-                <Video className="size-4" />
-                Meeting
-              </a>
-              <a className="border-transparent font-medium text-[#a1a1a1] text-sm leading-5 border-black/1 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2">
-                <Layers className="size-4" />
-                Architecture
-              </a>
-              <a className="border-transparent font-medium text-[#a1a1a1] text-sm leading-5 border-black/1 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2">
-                <CheckCircle2 className="size-4" />
-                Decisions
-              </a>
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+              {navLinks.map(({ label, icon: Icon, active }) => (
+                <a
+                  key={label}
+                  className={`font-medium text-sm leading-5 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2 transition-colors ${
+                    active
+                      ? "text-neutral-50 border-neutral-50"
+                      : "border-transparent text-[#a1a1a1] hover:text-neutral-50"
+                  }`}
+                >
+                  <Icon className="size-4" />
+                  {label}
+                </a>
+              ))}
             </nav>
-            <div className="flex items-center gap-2">
-            <Button
-             variant="ghost"
-             className="text-[#a1a1a1] text-sm leading-5 px-3 h-8"
-             onClick={() => navigate("/login")}
-             >
-             Login
-            </Button>
-            <Button
-             className="bg-neutral-200 text-neutral-900 text-sm leading-5 px-4 h-8"
-             onClick={() => navigate("/signup")}
-             >
-             Start Free
-            </Button>
+            <div className="hidden sm:flex items-center gap-2">
+              <Button
+                variant="ghost"
+                className="text-[#a1a1a1] text-sm leading-5 px-3 h-9 transition-colors hover:text-neutral-50"
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </Button>
+              <Button
+                className="bg-neutral-200 text-neutral-900 text-sm leading-5 px-4 h-9 transition-colors hover:bg-neutral-100"
+                onClick={() => navigate("/signup")}
+              >
+                Start Free
+              </Button>
             </div>
+            <button
+              type="button"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              className="lg:hidden size-9 shrink-0 rounded-lg border-white/10 border-1 border-solid flex justify-center items-center text-[#a1a1a1] transition-colors hover:bg-neutral-900 hover:text-neutral-50"
+            >
+              {mobileMenuOpen ? (
+                <X className="size-4" />
+              ) : (
+                <Menu className="size-4" />
+              )}
+            </button>
+          </div>
+          <div
+            className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out border-white/10 border-t ${
+              mobileMenuOpen ? "max-h-[24rem] opacity-100" : "max-h-0 opacity-0 border-t-0"
+            }`}
+          >
+            <nav className="mx-auto max-w-7xl px-4 sm:px-6 py-4 flex flex-col gap-1">
+              {navLinks.map(({ label, icon: Icon, active }) => (
+                <a
+                  key={label}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`font-medium rounded-lg text-sm leading-5 flex px-3 py-2.5 items-center gap-2 transition-colors ${
+                    active
+                      ? "bg-neutral-900 text-neutral-50"
+                      : "text-[#a1a1a1] hover:bg-neutral-900 hover:text-neutral-50"
+                  }`}
+                >
+                  <Icon className="size-4" />
+                  {label}
+                </a>
+              ))}
+              <div className="flex flex-col gap-2 pt-3 mt-2 border-white/10 border-t sm:hidden">
+                <Button
+                  variant="ghost"
+                  className="text-[#a1a1a1] justify-center h-10"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    navigate("/login");
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  className="bg-neutral-200 text-neutral-900 justify-center h-10"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    navigate("/signup");
+                  }}
+                >
+                  Start Free
+                </Button>
+              </div>
+            </nav>
           </div>
         </header>
-        <main className="p-12">
-          <section className="flex items-center gap-12">
-            <div className="w-[42%] flex flex-col gap-6">
+        <main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-12">
+          <section className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <div className="w-full lg:w-[42%] flex flex-col gap-5 sm:gap-6">
               <div className="rounded-full bg-neutral-900 text-[#a1a1a1] text-xs leading-4 border-white/10 border-1 border-solid flex px-3 py-1 items-center gap-2 w-fit">
                 <span className="size-1.5 rounded-full bg-[#00bc7d]" />
                 One workspace for engineering teams
               </div>
-              <h1 className="font-semibold text-4xl leading-10 tracking-tight">
+              <h1 className="font-semibold text-3xl sm:text-4xl lg:text-[2.5rem] leading-tight tracking-tight">
                 Everything your engineering team needs. One workspace.
               </h1>
-              <p className="text-[#a1a1a1] text-base leading-6">
+              <p className="text-[#a1a1a1] text-sm sm:text-base leading-6 max-w-xl">
                 Meetings, repositories, architecture discussions, deployment
                 visibility, and team decisions in a single place.
               </p>
-              <div className="flex items-center gap-2">
-                <Button className="bg-neutral-200 text-neutral-900 text-sm leading-5 px-5 gap-2 h-10">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <Button className="bg-neutral-200 text-neutral-900 text-sm leading-5 px-5 gap-2 h-11 transition-colors hover:bg-neutral-100">
                   <Zap className="size-4" />
                   Start Free
                 </Button>
                 <Button
                   variant="outline"
-                  className="bg-neutral-900 text-neutral-50 text-sm leading-5 border-white/10 border-1 border-solid px-5 gap-2 h-10"
+                  className="bg-neutral-900 text-neutral-50 text-sm leading-5 border-white/10 border-1 border-solid px-5 gap-2 h-11 transition-colors hover:bg-neutral-800"
                 >
                   <Play className="size-4" />
                   View Demo
                 </Button>
               </div>
-              <div className="text-[#a1a1a1] text-xs leading-4 flex mt-2 items-center gap-6">
+              <div className="text-[#a1a1a1] text-xs leading-4 flex flex-col sm:flex-row sm:flex-wrap mt-2 items-start sm:items-center gap-3 sm:gap-6">
                 <span className="flex items-center gap-2">
                   <Check className="size-3.5 text-[#00bc7d]" />
                   No credit card
@@ -121,7 +201,7 @@ export default function Landing() {
                 </span>
               </div>
             </div>
-            <div className="w-[58%]">
+            <div className="w-full lg:w-[58%] min-w-0">
               <div className="shadow-2xl rounded-xl bg-neutral-900 border-white/10 border-1 border-solid overflow-hidden">
                 <div className="border-white/10 border-t-0 border-r-0 border-b-1 border-l-0 border-solid flex px-4 py-2.5 justify-between items-center">
                   <div className="flex items-center gap-1.5">
@@ -129,7 +209,7 @@ export default function Landing() {
                     <span className="size-2.5 rounded-full bg-[#fe9a00]/70" />
                     <span className="size-2.5 rounded-full bg-[#00bc7d]/70" />
                   </div>
-                  <div className="text-xs leading-4 flex items-center gap-4">
+                  <div className="text-xs leading-4 hidden sm:flex items-center gap-2 lg:gap-4 overflow-x-auto">
                     <span className="font-medium text-neutral-50 border-neutral-50 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-0.5 items-center gap-1.5">
                       <GitBranch className="size-3" />
                       Repository
@@ -151,7 +231,7 @@ export default function Landing() {
                     A
                   </div>
                 </div>
-                <div className="grid grid-cols-2 p-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 p-2 gap-2">
                   <div className="col-span-1 rounded-lg bg-neutral-950 border-white/10 border-1 border-solid overflow-hidden">
                     <div className="flex px-3 py-2 justify-between items-center">
                       <span className="font-medium text-xs leading-4 flex items-center gap-1.5">
@@ -260,9 +340,9 @@ export default function Landing() {
               </div>
             </div>
           </section>
-          <section className="rounded-2xl bg-neutral-900 border-white/10 border-1 border-solid mt-12 p-12">
+          <section className="rounded-2xl bg-neutral-900 border-white/10 border-1 border-solid mt-8 sm:mt-12 p-6 sm:p-8 lg:p-12">
             <div className="text-center flex flex-col items-center gap-2">
-              <h2 className="font-semibold text-2xl leading-8 tracking-tight">
+              <h2 className="font-semibold text-xl sm:text-2xl leading-8 tracking-tight">
                 How teams work today
               </h2>
               <p className="max-w-xl text-[#a1a1a1] text-sm leading-5">
@@ -315,7 +395,7 @@ export default function Landing() {
               </div>
             </div>
             <div className="flex mt-8 justify-center">
-              <div className="rounded-2xl bg-neutral-200/10 border-neutral-200/30 border-1 border-solid flex px-12 py-6 items-center gap-4">
+              <div className="rounded-2xl bg-neutral-200/10 border-neutral-200/30 border-1 border-solid flex flex-col sm:flex-row px-6 sm:px-8 lg:px-12 py-6 items-center gap-4 text-center sm:text-left w-full max-w-2xl">
                 <div className="size-12 rounded-xl bg-neutral-200 text-neutral-900 flex justify-center items-center">
                   <Hexagon className="size-6" />
                 </div>
@@ -329,9 +409,9 @@ export default function Landing() {
             </div>
           </section>
         </main>
-        <footer className="bg-neutral-900 border-white/10 border-t-1 border-r-0 border-b-0 border-l-0 border-solid w-full">
-          <div className="flex px-12 py-8 flex-col gap-8">
-            <div className="flex justify-between items-start gap-12">
+        <footer className="bg-neutral-900 border-white/10 border-t w-full mt-8 sm:mt-12">
+          <div className="mx-auto max-w-7xl flex px-4 sm:px-6 lg:px-12 py-8 flex-col gap-8">
+            <div className="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-12">
               <div className="max-w-sm flex flex-col gap-4">
                 <div className="flex items-center gap-2">
                   <div className="size-7 rounded-lg bg-neutral-200 text-neutral-900 flex justify-center items-center">
@@ -361,7 +441,7 @@ export default function Landing() {
                 </a>
               </div>
             </div>
-            <div className="border-white/10 border-t-1 border-r-0 border-b-0 border-l-0 border-solid flex pt-6 justify-between items-center">
+            <div className="border-white/10 border-t flex pt-6 flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
               <span className="text-[#a1a1a1] text-xs leading-4">
                 © 2025 DevSphere. All rights reserved.
               </span>
@@ -376,7 +456,6 @@ export default function Landing() {
             </div>
           </div>
         </footer>
-      </div>
     </div>
   );
 }

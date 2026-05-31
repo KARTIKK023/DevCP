@@ -1,44 +1,43 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const Event = require('../models/Event');
+const { trackEvent } = require('./eventService');
 
 const findUserByEmail = async (email) => {
-  return User.findOne({ email }).select('+password');
+  return User.findOne({ email }).select('+passwordHash');
 };
 
-const createUser = async ({ name, email, password }) => {
-  const hashedPassword = await bcrypt.hash(password, 10);
+const findUserByProvider = async (provider, providerId) => {
+  return User.findOne({ provider, providerId });
+};
 
-  const user = new User({
+const createUser = async ({ name, email, password, provider = 'local', providerId = null, avatar = null }) => {
+  const userData = {
     name,
     email,
-    password: hashedPassword,
-    authProviders: {
-      local: true,
-      google: false,
-      github: false,
-    },
-    lastSeenAt: new Date(),
-  });
+    provider,
+    providerId,
+    avatar,
+  };
 
+  if (provider === 'local' && password) {
+    userData.passwordHash = await bcrypt.hash(password, 10);
+  }
+
+  const user = new User(userData);
   return user.save();
 };
 
-const createSignupEvent = async (userId, metadata = {}) => {
-  return Event.create({
-    userId,
-    eventName: 'user_signup',
-    metadata,
-  });
+const trackSignupEvent = async (userId, metadata = {}) => {
+  return trackEvent({ userId, eventType: 'SIGNUP', metadata });
 };
 
-const createLoginEvent = async (userId, metadata = {}) => {
-  return Event.create({
-    userId,
-    eventName: 'user_login',
-    metadata,
-  });
+const trackLoginEvent = async (userId, metadata = {}) => {
+  return trackEvent({ userId, eventType: 'LOGIN', metadata });
+};
+
+const trackLogoutEvent = async (userId, metadata = {}) => {
+  return trackEvent({ userId, eventType: 'LOGOUT', metadata });
 };
 
 const generateToken = (user) => {
@@ -55,26 +54,22 @@ const generateToken = (user) => {
     },
     secret,
     {
-      expiresIn: '2h',
+      expiresIn: '7d',
     }
   );
 };
 
-const updateLastSeen = async (user) => {
-  user.lastSeenAt = new Date();
-  return user.save();
-};
-
 const findUserById = async (id) => {
-  return User.findById(id).select('-password');
+  return User.findById(id).select('-passwordHash');
 };
 
 module.exports = {
   findUserByEmail,
+  findUserByProvider,
   createUser,
-  createSignupEvent,
-  createLoginEvent,
+  trackSignupEvent,
+  trackLoginEvent,
+  trackLogoutEvent,
   generateToken,
-  updateLastSeen,
   findUserById,
 };

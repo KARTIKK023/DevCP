@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const PROVIDERS = ['local', 'google', 'github'];
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -20,58 +22,46 @@ const userSchema = new mongoose.Schema(
         'Please provide a valid email address',
       ],
     },
-    password: {
-      type: String,
-      minlength: [6, 'Password must be at least 6 characters long'],
-      select: false, // Don't return password by default
-    },
-    authProviders: {
-      local: {
-        type: Boolean,
-        default: true,
-      },
-      google: {
-        type: Boolean,
-        default: false,
-      },
-      github: {
-        type: Boolean,
-        default: false,
-      },
-    },
-    githubUsername: {
-      type: String,
-      unique: true,
-      sparse: true, // Allow multiple null values for unique constraint
-      trim: true,
-    },
     avatar: {
       type: String,
       trim: true,
+      default: null,
     },
-    lastSeenAt: {
-      type: Date,
+    provider: {
+      type: String,
+      enum: PROVIDERS,
+      default: 'local',
+      required: true,
+    },
+    providerId: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+    passwordHash: {
+      type: String,
+      select: false,
+      default: null,
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt
+    timestamps: true,
   }
 );
 
-// Indexes
-userSchema.index({ email: 1 });
-userSchema.index({ githubUsername: 1 });
-userSchema.index({ createdAt: -1 });
-userSchema.index({ lastSeenAt: -1 });
-
-// Pre-save middleware to update lastSeenAt on creation
-userSchema.pre('save', function (next) {
-  if (this.isNew) {
-    this.lastSeenAt = new Date();
+userSchema.index(
+  { provider: 1, providerId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      provider: { $in: ['google', 'github'] },
+      providerId: { $exists: true, $type: 'string' },
+    },
   }
-  next();
-});
+);
+userSchema.index({ createdAt: -1 });
 
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+module.exports.PROVIDERS = PROVIDERS;

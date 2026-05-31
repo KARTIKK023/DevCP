@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Check,
@@ -18,16 +18,42 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ApiError } from "@/api/client";
+import { useAuth } from "@/hooks/useAuth";
 
 import { FallbackComponent } from "../CustomComponents";
 
 export default function Signup() {
+  const navigate = useNavigate();
+  const { signup } = useAuth();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      await signup({ name, email, password });
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      setError(
+        err instanceof ApiError ? err.message : "Unable to create account. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div>
-      <div className="bg-neutral-950 text-neutral-50 w-full h-fit h-fit min-h-screen w-screen min-w-screen max-w-screen overflow-visible">
-        <div className="min-h-[956px] flex w-full">
-          <div className="w-[55%] border-white/10 border-t-0 border-r-1 border-b-0 border-l-0 border-solid flex p-12 flex-col">
-            <div className="flex mb-12 items-center gap-2">
+    <div className="bg-neutral-950 text-neutral-50 min-h-dvh w-full overflow-x-hidden">
+      <div className="min-h-dvh flex flex-col lg:flex-row w-full">
+        <div className="hidden lg:flex lg:w-[55%] border-white/10 lg:border-r p-8 xl:p-12 flex-col order-2 lg:order-1">
+          <div className="flex mb-8 xl:mb-12 items-center gap-2">
               <div className="size-9 rounded-lg bg-neutral-800 border-white/10 border-1 border-solid flex justify-center items-center">
                 <Hexagon className="size-5 text-neutral-50" />
               </div>
@@ -46,7 +72,7 @@ export default function Signup() {
                     Workspace setup in minutes
                   </span>
                 </div>
-                <h1 className="font-semibold text-3xl leading-9 tracking-tight mb-2">
+                <h1 className="font-semibold text-2xl sm:text-3xl leading-8 sm:leading-9 tracking-tight mb-2">
                   Spin up your engineering workspace
                 </h1>
                 <p className="leading-relaxed text-[#a1a1a1] text-sm leading-5">
@@ -153,23 +179,35 @@ export default function Signup() {
                 </div>
               </div>
             </div>
+        </div>
+        <div className="w-full lg:w-[45%] bg-neutral-900 flex p-6 sm:p-8 lg:p-12 flex-col justify-center order-1 lg:order-2 min-h-dvh lg:min-h-0">
+          <div className="flex lg:hidden mb-8 items-center gap-2">
+            <div className="size-9 rounded-lg bg-neutral-800 border-white/10 border-1 border-solid flex justify-center items-center">
+              <Hexagon className="size-5 text-neutral-50" />
+            </div>
+            <Link
+              to="/"
+              className="font-semibold text-base leading-6 tracking-tight"
+            >
+              DevSphere
+            </Link>
           </div>
-          <div className="w-[45%] bg-neutral-900 flex p-12 flex-col justify-center">
-            <div className="max-w-[400px] mx-auto w-full">
+          <div className="max-w-[400px] mx-auto w-full">
               <div className="mb-8">
-                <h2 className="font-semibold text-2xl leading-8 tracking-tight mb-1">
+                <h2 className="font-semibold text-2xl sm:text-3xl leading-8 sm:leading-9 tracking-tight mb-1">
                   Create your workspace
                 </h2>
                 <p className="text-[#a1a1a1] text-sm leading-5">
                   Set up your engineering account to get started.
                 </p>
               </div>
+              <form onSubmit={handleSubmit}>
               <div className="flex mb-6 flex-col gap-2">
-                <Button className="bg-neutral-800 text-neutral-50 border-white/10 border-1 border-solid p-4 justify-center gap-2 w-full">
+                <Button type="button" variant="secondary" className="w-full h-11" disabled>
                   <FallbackComponent className="size-4" />
                   Continue with GitHub
                 </Button>
-                <Button className="bg-neutral-800 text-neutral-50 border-white/10 border-1 border-solid p-4 justify-center gap-2 w-full">
+                <Button type="button" variant="secondary" className="w-full h-11" disabled>
                   <FallbackComponent className="size-4" />
                   Continue with Google
                 </Button>
@@ -179,6 +217,11 @@ export default function Signup() {
                 <span className="text-[#a1a1a1] text-xs leading-4">OR</span>
                 <div className="bg-white/10 flex-1 h-px" />
               </div>
+              {error && (
+                <p className="text-[#ff6467] text-sm leading-5 rounded-lg bg-[#ff6467]/10 px-3 py-2 mb-4">
+                  {error}
+                </p>
+              )}
               <div className="flex mb-6 flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <Label className="font-medium text-sm leading-5">
@@ -187,8 +230,12 @@ export default function Signup() {
                   <div className="relative">
                     <User className="size-4 top-1/2 -translate-y-1/2 text-[#a1a1a1] absolute left-3" />
                     <Input
-                      placeholder="Kartik Chaudhary"
-                      className="bg-neutral-950 border-white/15 border-0 border-solid pl-9"
+                      required
+                      minLength={2}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Jane Doe"
+                      className="bg-neutral-950 border-white/15 border-0 border-solid pl-9 h-11 w-full transition-colors focus-visible:ring-2 focus-visible:ring-neutral-50/20"
                     />
                   </div>
                 </div>
@@ -197,8 +244,12 @@ export default function Signup() {
                   <div className="relative">
                     <Mail className="size-4 top-1/2 -translate-y-1/2 text-[#a1a1a1] absolute left-3" />
                     <Input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@company.com"
-                      className="bg-neutral-950 border-white/15 border-0 border-solid pl-9"
+                      className="bg-neutral-950 border-white/15 border-0 border-solid pl-9 h-11 w-full transition-colors focus-visible:ring-2 focus-visible:ring-neutral-50/20"
                     />
                   </div>
                 </div>
@@ -210,16 +261,21 @@ export default function Signup() {
                     <Lock className="size-4 top-1/2 -translate-y-1/2 text-[#a1a1a1] absolute left-3" />
                     <Input
                       type="password"
+                      required
+                      minLength={6}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="bg-neutral-950 border-white/15 border-0 border-solid pl-9"
+                      className="bg-neutral-950 border-white/15 border-0 border-solid pl-9 h-11 w-full transition-colors focus-visible:ring-2 focus-visible:ring-neutral-50/20"
                     />
                   </div>
                 </div>
               </div>
-              <Button className="bg-neutral-200 text-neutral-900 mb-4 p-4 justify-center gap-2 w-full">
-                Signup here
+              <Button type="submit" className="w-full h-11 mb-4" disabled={isSubmitting}>
+                {isSubmitting ? "Creating account…" : "Signup here"}
                 <ArrowRight className="size-4" />
               </Button>
+              </form>
               <p className="text-center text-[#a1a1a1] text-sm leading-5 mb-8">
                 Already have a workspace?
                 <Link to="/login" className="font-medium text-neutral-50">
@@ -234,6 +290,5 @@ export default function Signup() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
