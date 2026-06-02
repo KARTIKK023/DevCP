@@ -33,9 +33,6 @@ export async function getCurrentUser() {
 }
 
 export function getOAuthUrl(provider) {
-}
-
-export function getOAuthUrl(provider) {
   const base = API_BASE.replace(/\/$/, '');
   return `${base}/api/auth/${provider}`;
 }
