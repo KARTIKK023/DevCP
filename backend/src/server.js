@@ -39,8 +39,10 @@ const startServer = async () => {
     await connectDB();
 
     // Start listening only after successful DB connection
-    app.listen(config.port, () => {
-      console.log(`✓ Server running on port ${config.port}`);
+    const host = process.env.HOST || '0.0.0.0';
+
+    app.listen(config.port, host, () => {
+      console.log(`✓ Server running on ${host}:${config.port}`);
       console.log(`✓ Environment: ${config.nodeEnv}`);
     });
   } catch (error) {

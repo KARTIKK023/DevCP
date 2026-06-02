@@ -16,6 +16,7 @@ const connectDB = async () => {
     console.log('✓ MongoDB connected successfully');
 
     const User = require('../models/User');
+    const Meeting = require('../models/Meeting');
 
     if (process.env.NODE_ENV !== 'production') {
       try {
@@ -26,7 +27,9 @@ const connectDB = async () => {
         }
       }
 
-      await User.syncIndexes();
+      await Promise.all([User.syncIndexes(), Meeting.syncIndexes()]);
+    } else {
+      await Promise.all([User.init(), Meeting.init()]);
     }
 
     return true;
