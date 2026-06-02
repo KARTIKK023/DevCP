@@ -1,4 +1,5 @@
 import { apiRequest, setToken } from './client';
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 export async function signup({ name, email, password }) {
   const data = await apiRequest('/api/auth/signup', {
@@ -32,7 +33,11 @@ export async function getCurrentUser() {
 }
 
 export function getOAuthUrl(provider) {
-  return `/api/auth/${provider}`;
+}
+
+export function getOAuthUrl(provider) {
+  const base = API_BASE.replace(/\/$/, '');
+  return `${base}/api/auth/${provider}`;
 }
 
 export async function logout() {
