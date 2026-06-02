@@ -1,9 +1,9 @@
-# Deploying Vibecode on Render Free Tier
+# Deploying DevSphere on Render Free Tier
 
 This project should be deployed as two Render services:
 
-- `vibecode-api`: Node/Express Web Service for the backend.
-- `vibecode-web`: Static Site for the Vite React frontend.
+- `devsphere-api`: Node/Express Web Service for the backend.
+- `devsphere-web`: Static Site for the Vite React frontend.
 
 The repo includes `render.yaml`, so you can deploy from Render Blueprints. You can also create both services manually from the Render dashboard.
 
@@ -19,7 +19,7 @@ Use MongoDB Atlas for the database because Render free web services do not inclu
 Use a database-specific URI:
 
 ```text
-mongodb+srv://USER:PASSWORD@CLUSTER.mongodb.net/vibecode?retryWrites=true&w=majority
+mongodb+srv://USER:PASSWORD@CLUSTER.mongodb.net/devsphere?retryWrites=true&w=majority
 ```
 
 ## 2. Push the repo to GitHub
@@ -32,20 +32,20 @@ Render deploys from a Git repo. Commit your changes and push to GitHub before cr
 2. Click `New` -> `Blueprint`.
 3. Connect this GitHub repo.
 4. Render will read `render.yaml` and create:
-   - `vibecode-api`
-   - `vibecode-web`
+   - `devsphere-api`
+   - `devsphere-web`
 5. Fill the required environment variables marked as `sync: false`.
 
 ## 4. Backend environment variables
 
-Set these on `vibecode-api`:
+Set these on `devsphere-api`:
 
 ```text
 NODE_ENV=production
 HOST=0.0.0.0
 MONGODB_URI=your_mongodb_atlas_uri
 JWT_SECRET=generate_a_long_random_secret
-FRONTEND_URL=https://vibecode-web.onrender.com
+FRONTEND_URL=https://devsphere-web.onrender.com
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 GITHUB_CLIENT_ID=your_github_client_id
@@ -56,10 +56,10 @@ Do not set `PORT` manually unless Render asks for it. Render provides the port a
 
 ## 5. Frontend environment variables
 
-Set this on `vibecode-web`:
+Set this on `devsphere-web`:
 
 ```text
-VITE_API_URL=https://vibecode-api.onrender.com
+VITE_API_URL=https://devsphere-api.onrender.com
 ```
 
 After changing `VITE_API_URL`, redeploy the frontend because Vite bakes this value into the built files.
@@ -71,13 +71,13 @@ After the backend service is live, update your OAuth apps.
 Google OAuth authorized redirect URI:
 
 ```text
-https://vibecode-api.onrender.com/api/auth/google/callback
+https://devsphere-api.onrender.com/api/auth/google/callback
 ```
 
 GitHub OAuth callback URL:
 
 ```text
-https://vibecode-api.onrender.com/api/auth/github/callback
+https://devsphere-api.onrender.com/api/auth/github/callback
 ```
 
 Also keep local callback URLs if you still want local development:
@@ -103,7 +103,7 @@ http://localhost:5001/api/auth/github/callback
 Backend health check:
 
 ```text
-https://vibecode-api.onrender.com/health
+https://devsphere-api.onrender.com/health
 ```
 
 Expected response:

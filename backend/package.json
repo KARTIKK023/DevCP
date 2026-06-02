@@ -1,5 +1,5 @@
 {
-  "name": "vibecode-backend",
+  "name": "devsphere-backend",
   "version": "1.0.0",
   "description": "Backend foundation for a developer collaboration platform",
   "main": "src/server.js",

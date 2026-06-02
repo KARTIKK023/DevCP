@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: vibecode-api
+    name: devsphere-api
     runtime: node
     plan: free
     buildCommand: cd backend && npm ci
@@ -27,7 +27,7 @@ services:
         sync: false
 
   - type: web
-    name: vibecode-web
+    name: devsphere-web
     runtime: static
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: ./frontend/dist
