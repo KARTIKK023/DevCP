@@ -21,6 +21,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/meetings', meetingRoutes);
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'DevSphere API is running',
+    health: '/health',
+  });
+});
+
 // Error handling middleware
 app.use(errorHandler);
 
