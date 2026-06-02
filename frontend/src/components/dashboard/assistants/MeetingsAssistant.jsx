@@ -14,7 +14,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function MeetingsAssistant() {
+export default function MeetingsAssistant({ stats = { active: [], upcoming: [], past: [] } }) {
+  const activeCount = stats.active?.length || 0;
+  const upcomingCount = stats.upcoming?.length || 0;
+  const pastCount = stats.past?.length || 0;
+
   return (
     <>
       <Card className="bg-neutral-950 border-white/10 border-0 border-solid p-4 gap-3">
@@ -24,27 +28,26 @@ export default function MeetingsAssistant() {
         </CardHeader>
         <CardContent className="flex p-0 flex-col gap-3">
           <p className="leading-relaxed text-[#a1a1a1] text-xs leading-4">
-            3 active meetings, 2 upcoming today, 5 AI note sets generated this
-            week.
+            {activeCount} active meetings, {upcomingCount} upcoming, {pastCount} completed.
           </p>
           <div className="flex flex-wrap gap-2">
             <Badge
               variant="secondary"
               className="bg-neutral-800 text-neutral-50 text-xs leading-4"
             >
-              3 active
+              {activeCount} active
             </Badge>
             <Badge
               variant="secondary"
               className="bg-neutral-800 text-neutral-50 text-xs leading-4"
             >
-              2 today
+              {upcomingCount} upcoming
             </Badge>
             <Badge
               variant="secondary"
               className="bg-neutral-800 text-neutral-50 text-xs leading-4"
             >
-              5 notes
+              {pastCount} past
             </Badge>
           </div>
         </CardContent>

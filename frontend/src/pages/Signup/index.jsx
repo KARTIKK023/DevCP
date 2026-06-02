@@ -15,13 +15,14 @@ import {
   ShieldCheck,
   User,
 } from "lucide-react";
+import { getOAuthUrl } from "@/api/auth";
+import AuthToast from "@/components/auth/AuthToast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ApiError } from "@/api/client";
 import { useAuth } from "@/hooks/useAuth";
-
-import { FallbackComponent } from "../CustomComponents";
+import { validateEmail, validateName, validatePassword } from "@/lib/authValidation";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -29,28 +30,45 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState({ message: "", type: "success" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError("");
+    setToast({ message: "", type: "success" });
+
+    const nameError = validateName(name);
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+
+    if (nameError || emailError || passwordError) {
+      setToast({ message: nameError || emailError || passwordError, type: "error" });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       await signup({ name, email, password });
-      navigate("/dashboard", { replace: true });
+      setToast({ message: "Account created successfully.", type: "success" });
+      window.setTimeout(() => navigate("/dashboard", { replace: true }), 500);
     } catch (err) {
-      setError(
-        err instanceof ApiError ? err.message : "Unable to create account. Please try again."
-      );
+      setToast({
+        message: err instanceof ApiError ? err.message : "Unable to create account. Please try again.",
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const startSocialLogin = (provider) => {
+    window.location.href = getOAuthUrl(provider);
+  };
+
   return (
     <div className="bg-neutral-950 text-neutral-50 min-h-dvh w-full overflow-x-hidden">
+      <AuthToast message={toast.message} type={toast.type} />
       <div className="min-h-dvh flex flex-col lg:flex-row w-full">
         <div className="hidden lg:flex lg:w-[55%] border-white/10 lg:border-r p-8 xl:p-12 flex-col order-2 lg:order-1">
           <div className="flex mb-8 xl:mb-12 items-center gap-2">
@@ -91,7 +109,7 @@ export default function Signup() {
                     </div>
                     <div className="pb-2 flex-1">
                       <div className="flex mb-1 items-center gap-2">
-                        <FallbackComponent className="size-4 text-neutral-50" />
+                        <GitBranch className="size-4 text-neutral-50" />
                         <span className="font-medium text-sm leading-5">
                           Connect GitHub
                         </span>
@@ -101,7 +119,7 @@ export default function Signup() {
                       </p>
                       <div className="rounded-lg bg-neutral-900 border-white/10 border-1 border-solid flex p-2 justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <FallbackComponent className="size-4 text-[#a1a1a1]" />
+                          <GitBranch className="size-4 text-[#a1a1a1]" />
                           <span className="text-neutral-50 text-xs leading-4">
                             kartikchaudhary
                           </span>
@@ -201,14 +219,14 @@ export default function Signup() {
                   Set up your engineering account to get started.
                 </p>
               </div>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} noValidate>
               <div className="flex mb-6 flex-col gap-2">
-                <Button type="button" variant="secondary" className="w-full h-11" disabled>
-                  <FallbackComponent className="size-4" />
+                <Button type="button" variant="secondary" className="w-full h-11" onClick={() => startSocialLogin("github")}>
+                  <GitBranch className="size-4" />
                   Continue with GitHub
                 </Button>
-                <Button type="button" variant="secondary" className="w-full h-11" disabled>
-                  <FallbackComponent className="size-4" />
+                <Button type="button" variant="secondary" className="w-full h-11" onClick={() => startSocialLogin("google")}>
+                  <Hexagon className="size-4" />
                   Continue with Google
                 </Button>
               </div>
@@ -217,11 +235,6 @@ export default function Signup() {
                 <span className="text-[#a1a1a1] text-xs leading-4">OR</span>
                 <div className="bg-white/10 flex-1 h-px" />
               </div>
-              {error && (
-                <p className="text-[#ff6467] text-sm leading-5 rounded-lg bg-[#ff6467]/10 px-3 py-2 mb-4">
-                  {error}
-                </p>
-              )}
               <div className="flex mb-6 flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <Label className="font-medium text-sm leading-5">

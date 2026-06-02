@@ -8,10 +8,12 @@ import PublicOnlyRoute from '../components/auth/PublicOnlyRoute'
 import Landing from '../pages/Landing'
 import Login from '../pages/Login'
 import Signup from '../pages/Signup'
+import AuthCallback from '../pages/AuthCallback'
 
 import Dashboard from '../pages/Dashboard'
 import Repositories from '../pages/Repositories'
 import Meetings from '../pages/Meetings'
+import MeetingRoom from '../pages/MeetingRoom'
 import Architecture from '../pages/Architecture'
 import Decisions from '../pages/Decisions'
 import Deployments from '../pages/Deployments'
@@ -31,11 +33,14 @@ export default function AppRoutes() {
         </Route>
       </Route>
 
+      <Route path="/auth/callback" element={<AuthCallback />} />
+
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="repositories" element={<Repositories />} />
           <Route path="meetings" element={<Meetings />} />
+          <Route path="meetings/:id/room" element={<MeetingRoom />} />
           <Route path="architecture" element={<Architecture />} />
           <Route path="decisions" element={<Decisions />} />
           <Route path="deployments" element={<Deployments />} />

@@ -28,6 +28,32 @@ const createUser = async ({ name, email, password, provider = 'local', providerI
   return user.save();
 };
 
+const upsertOAuthUser = async ({ provider, providerId, name, email, avatar = null }) => {
+  const normalizedEmail = email.trim().toLowerCase();
+  let user = await findUserByProvider(provider, providerId);
+
+  if (!user) {
+    user = await User.findOne({ email: normalizedEmail }).select('+passwordHash');
+  }
+
+  if (user) {
+    user.name = name || user.name;
+    user.email = normalizedEmail;
+    user.provider = provider;
+    user.providerId = providerId;
+    user.avatar = avatar || user.avatar;
+    return user.save();
+  }
+
+  return createUser({
+    name,
+    email: normalizedEmail,
+    provider,
+    providerId,
+    avatar,
+  });
+};
+
 const trackSignupEvent = async (userId, metadata = {}) => {
   return trackEvent({ userId, eventType: 'SIGNUP', metadata });
 };
@@ -67,6 +93,7 @@ module.exports = {
   findUserByEmail,
   findUserByProvider,
   createUser,
+  upsertOAuthUser,
   trackSignupEvent,
   trackLoginEvent,
   trackLogoutEvent,

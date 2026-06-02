@@ -24,7 +24,7 @@ export default function Dashboard() {
         Engineering workspace
       </Badge>
     ),
-    avatarStyle: "empty",
+    avatarStyle: "initials-lg",
     contentClassName: "flex flex-col flex-1 min-h-0 overflow-hidden",
     assistant: <DashboardAssistant />,
   });

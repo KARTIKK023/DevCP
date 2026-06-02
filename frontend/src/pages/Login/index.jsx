@@ -12,13 +12,15 @@ import {
   Mail,
   ShieldCheck,
 } from "lucide-react";
+import { getOAuthUrl } from "@/api/auth";
 import { ApiError } from "@/api/client";
+import AuthToast from "@/components/auth/AuthToast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
-import { FallbackComponent } from "../CustomComponents";
+import { validateEmail, validatePassword } from "@/lib/authValidation";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -26,30 +28,46 @@ export default function Login() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState({ message: "", type: "success" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const from = location.state?.from || "/dashboard";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError("");
+    setToast({ message: "", type: "success" });
+
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+
+    if (emailError || passwordError) {
+      setToast({ message: emailError || passwordError, type: "error" });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       await login({ email, password });
-      navigate(from, { replace: true });
+      setToast({ message: "Logged in successfully.", type: "success" });
+      window.setTimeout(() => navigate(from, { replace: true }), 500);
     } catch (err) {
-      setError(
-        err instanceof ApiError ? err.message : "Unable to sign in. Please try again."
-      );
+      setToast({
+        message: err instanceof ApiError ? err.message : "Email or password is wrong.",
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const startSocialLogin = (provider) => {
+    window.location.href = getOAuthUrl(provider);
+  };
+
   return (
     <div className="bg-neutral-950 text-neutral-50 min-h-dvh w-full overflow-x-hidden">
+      <AuthToast message={toast.message} type={toast.type} />
       <div className="min-h-dvh flex flex-col lg:flex-row w-full">
         <div className="w-full lg:w-[45%] border-white/10 lg:border-r flex flex-col justify-between p-6 sm:p-8 lg:p-12 gap-8 min-h-dvh lg:min-h-0">
           <div className="flex items-center gap-2">
@@ -73,24 +91,24 @@ export default function Login() {
                   Continue to your engineering workspace.
                 </p>
               </div>
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <Button
                     type="button"
                     variant="secondary"
                     className="w-full h-11"
-                    disabled
+                    onClick={() => startSocialLogin("github")}
                   >
-                    <FallbackComponent className="size-4" />
+                    <GitBranch className="size-4" />
                     Continue with GitHub
                   </Button>
                   <Button
                     type="button"
                     variant="secondary"
                     className="w-full h-11"
-                    disabled
+                    onClick={() => startSocialLogin("google")}
                   >
-                    <FallbackComponent className="size-4" />
+                    <Hexagon className="size-4" />
                     Continue with Google
                   </Button>
                 </div>
@@ -101,11 +119,6 @@ export default function Login() {
                   </span>
                   <div className="bg-white/10 flex-1 h-px" />
                 </div>
-                {error && (
-                  <p className="text-[#ff6467] text-sm leading-5 rounded-lg bg-[#ff6467]/10 px-3 py-2">
-                    {error}
-                  </p>
-                )}
                 <div className="flex flex-col gap-2">
                   <Label
                     htmlFor="email"

@@ -31,6 +31,10 @@ export async function getCurrentUser() {
   return data.data.user;
 }
 
+export function getOAuthUrl(provider) {
+  return `/api/auth/${provider}`;
+}
+
 export async function logout() {
   try {
     await apiRequest('/api/auth/logout', { method: 'POST' });

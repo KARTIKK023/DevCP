@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    bootstrap();
+    void Promise.resolve().then(bootstrap);
   }, [bootstrap]);
 
   const login = useCallback(async (credentials) => {
@@ -43,6 +43,13 @@ export function AuthProvider({ children }) {
     return newUser;
   }, []);
 
+  const authenticateWithToken = useCallback(async (token) => {
+    setToken(token);
+    const currentUser = await getCurrentUser();
+    setUser(currentUser);
+    return currentUser;
+  }, []);
+
   const logout = useCallback(async () => {
     await logoutApi();
     setUser(null);
@@ -55,14 +62,16 @@ export function AuthProvider({ children }) {
       isAuthenticated: Boolean(user),
       login,
       signup,
+      authenticateWithToken,
       logout,
     }),
-    [user, isLoading, login, signup, logout]
+    [user, isLoading, login, signup, authenticateWithToken, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

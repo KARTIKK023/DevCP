@@ -5,6 +5,7 @@ const config = require('./config');
 const healthRoutes = require('./routes/health');
 const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/events');
+const meetingRoutes = require('./routes/meetings');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/meetings', meetingRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

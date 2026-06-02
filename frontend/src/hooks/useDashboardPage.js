@@ -10,6 +10,8 @@ export function useDashboardPage(config) {
   const location = useLocation();
   const configRef = useRef(config);
 
+  // The dashboard pages pass JSX in this config; the ref keeps route updates stable.
+  // eslint-disable-next-line react-hooks/refs
   configRef.current = config;
 
   useLayoutEffect(() => {

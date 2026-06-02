@@ -16,7 +16,7 @@ export function DashboardShellProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    closeSidebar();
+    void Promise.resolve().then(closeSidebar);
   }, [location.pathname, closeSidebar]);
 
   useEffect(() => {
@@ -41,6 +41,7 @@ export function DashboardShellProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useDashboardShell() {
   const context = useContext(DashboardShellContext);
 

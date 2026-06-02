@@ -1,4 +1,4 @@
-import { AlertTriangle, ChevronDown, LogOut, Upload } from "lucide-react";
+import { AlertTriangle, LogOut, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
