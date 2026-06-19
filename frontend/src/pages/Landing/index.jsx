@@ -1,3 +1,4 @@
+import { MouseGlow } from "@/components/effects";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -57,8 +58,9 @@ export default function Landing() {
   ];
 
   return (
-    <div className="bg-neutral-950 text-neutral-50 min-h-dvh w-full overflow-x-hidden">
-        <header className="sticky top-0 z-40 border-white/10 border-b bg-neutral-950/95 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80 w-full">
+    <div className="relative bg-neutral-950 text-neutral-50 min-h-dvh w-full overflow-x-hidden">
+      <MouseGlow />
+        <header className="relative z-10 sticky top-0 border-white/10 border-b bg-neutral-950/95 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80 w-full">
           <div className="mx-auto max-w-7xl flex px-4 sm:px-6 lg:px-12 py-3 sm:py-4 justify-between items-center gap-4">
             <div className="flex items-center gap-2 min-w-0">
               <div className="size-7 shrink-0 rounded-lg bg-neutral-200 text-neutral-900 flex justify-center items-center">
@@ -159,7 +161,7 @@ export default function Landing() {
             </nav>
           </div>
         </header>
-        <main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-12">
+        <main className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-12">
           <section className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
             <div className="w-full lg:w-[42%] flex flex-col gap-5 sm:gap-6">
               <div className="rounded-full bg-neutral-900 text-[#a1a1a1] text-xs leading-4 border-white/10 border-1 border-solid flex px-3 py-1 items-center gap-2 w-fit">
@@ -409,7 +411,7 @@ export default function Landing() {
             </div>
           </section>
         </main>
-        <footer className="bg-neutral-900 border-white/10 border-t w-full mt-8 sm:mt-12">
+        <footer className="relative z-10 bg-neutral-900 border-white/10 border-t w-full mt-8 sm:mt-12">
           <div className="mx-auto max-w-7xl flex px-4 sm:px-6 lg:px-12 py-8 flex-col gap-8">
             <div className="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-12">
               <div className="max-w-sm flex flex-col gap-4">
