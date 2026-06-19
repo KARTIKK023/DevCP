@@ -1,3 +1,4 @@
+import { MouseGlow } from "@/components/effects";
 import {
   ArrowRight,
   ChevronDown,
@@ -36,6 +37,7 @@ export default function Architecture() {
   return (
     <>
 <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-6">
+  <MouseGlow />
                 <div className="flex flex-col gap-1">
                   <h2 className="font-semibold text-xl leading-7 tracking-tight">
                     Architecture Boards

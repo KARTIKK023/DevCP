@@ -1,3 +1,4 @@
+import { MouseGlow } from "@/components/effects";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -110,6 +111,7 @@ function ParticipantStack({ participants }) {
 
   return (
     <div className="flex items-center gap-2">
+      
       <div className="-space-x-2 flex">
         {visible.map((participant) => (
           <div
@@ -360,6 +362,7 @@ export default function Meetings() {
 
   return (
     <main className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+      <MouseGlow />
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start">
           <div className="flex flex-col gap-1">

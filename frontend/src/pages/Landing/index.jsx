@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { useOverviewAnimation } from "@/hooks/useOverviewAnimation";
 import { MouseGlow } from "@/components/effects";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -29,10 +31,12 @@ import { Button } from "@/components/ui/button";
 
 import { FallbackComponent } from "../CustomComponents";
 import { trackLandingVisit } from "@/api/analytics";
+import { scrollToSection } from "@/utils/scrollToSection";
 
 export default function Landing() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const overviewRef = useRef(null);
 
   useEffect(() => {
     trackLandingVisit({
@@ -50,11 +54,29 @@ export default function Landing() {
     };
   }, [mobileMenuOpen]);
 
+  useOverviewAnimation(overviewRef);
+
   const navLinks = [
-    { label: "Repository", icon: GitBranch, active: true },
-    { label: "Meeting", icon: Video },
-    { label: "Architecture", icon: Layers },
-    { label: "Decisions", icon: CheckCircle2 },
+  {
+    label: "Repository",
+    icon: GitBranch,
+    sectionId: "overview",
+  },
+  {
+    label: "Meeting",
+    icon: Video,
+    sectionId: "overview",
+  },
+  {
+    label: "Architecture",
+    icon: Layers,
+    sectionId: "overview",
+  },
+  {
+    label: "Decisions",
+    icon: CheckCircle2,
+    sectionId: "overview",
+  },
   ];
 
   return (
@@ -74,18 +96,16 @@ export default function Landing() {
               </Link>
             </div>
             <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-              {navLinks.map(({ label, icon: Icon, active }) => (
-                <a
-                  key={label}
-                  className={`font-medium text-sm leading-5 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2 transition-colors ${
-                    active
-                      ? "text-neutral-50 border-neutral-50"
-                      : "border-transparent text-[#a1a1a1] hover:text-neutral-50"
-                  }`}
+              {navLinks.map(({ label, icon: Icon, active, sectionId}) => (
+                <button
+                 key={label}
+                 type="button"
+                 onClick={() => scrollToSection(sectionId)}
+                 className="font-medium text-sm leading-5 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2 transition-colors border-transparent text-[#a1a1a1] hover:text-neutral-50 hover:border-neutral-50"
                 >
-                  <Icon className="size-4" />
-                  {label}
-                </a>
+                 <Icon className="size-4" />
+                 {label}
+                </button>
               ))}
             </nav>
             <div className="hidden sm:flex items-center gap-2">
@@ -97,8 +117,8 @@ export default function Landing() {
                 Login
               </Button>
               <Button
-                className="bg-neutral-200 text-neutral-900 text-sm leading-5 px-4 h-9 transition-colors hover:bg-neutral-100"
-                onClick={() => navigate("/signup")}
+               className="bg-neutral-200 text-neutral-900 text-sm leading-5 px-5 gap-2 h-11 transition-colors hover:bg-neutral-100"
+               onClick={() => navigate("/signup")}
               >
                 Start Free
               </Button>
@@ -123,10 +143,14 @@ export default function Landing() {
             }`}
           >
             <nav className="mx-auto max-w-7xl px-4 sm:px-6 py-4 flex flex-col gap-1">
-              {navLinks.map(({ label, icon: Icon, active }) => (
-                <a
+              {navLinks.map(({ label, icon: Icon, active, sectionId }) => (
+                <button
                   key={label}
-                  onClick={() => setMobileMenuOpen(false)}
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    scrollToSection(sectionId);
+                    }}
                   className={`font-medium rounded-lg text-sm leading-5 flex px-3 py-2.5 items-center gap-2 transition-colors ${
                     active
                       ? "bg-neutral-900 text-neutral-50"
@@ -135,7 +159,7 @@ export default function Landing() {
                 >
                   <Icon className="size-4" />
                   {label}
-                </a>
+                </button>
               ))}
               <div className="flex flex-col gap-2 pt-3 mt-2 border-white/10 border-t sm:hidden">
                 <Button
@@ -162,7 +186,10 @@ export default function Landing() {
           </div>
         </header>
         <main className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-12">
-          <section className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+          <section
+          id="hero"
+          className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12"
+          >
             <div className="w-full lg:w-[42%] flex flex-col gap-5 sm:gap-6">
               <div className="rounded-full bg-neutral-900 text-[#a1a1a1] text-xs leading-4 border-white/10 border-1 border-solid flex px-3 py-1 items-center gap-2 w-fit">
                 <span className="size-1.5 rounded-full bg-[#00bc7d]" />
@@ -176,8 +203,10 @@ export default function Landing() {
                 visibility, and team decisions in a single place.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                <Button className="bg-neutral-200 text-neutral-900 text-sm leading-5 px-5 gap-2 h-11 transition-colors hover:bg-neutral-100">
-                  <Zap className="size-4" />
+                <Button
+                 className="bg-neutral-200 text-neutral-900 text-sm leading-5 px-5 gap-2 h-11 transition-colors hover:bg-neutral-100"
+                 onClick={() => navigate("/signup")}
+                >
                   Start Free
                 </Button>
                 <Button
@@ -342,7 +371,11 @@ export default function Landing() {
               </div>
             </div>
           </section>
-          <section className="rounded-2xl bg-neutral-900 border-white/10 border-1 border-solid mt-8 sm:mt-12 p-6 sm:p-8 lg:p-12">
+          <section
+           ref={overviewRef}
+           id="overview"
+           className="overview-section rounded-2xl bg-neutral-900 border-white/10 border-1 border-solid mt-8 sm:mt-12 p-6 sm:p-8 lg:p-12"
+          >
             <div className="text-center flex flex-col items-center gap-2">
               <h2 className="font-semibold text-xl sm:text-2xl leading-8 tracking-tight">
                 How teams work today
@@ -354,33 +387,33 @@ export default function Landing() {
             </div>
             <div className="flex mt-8 justify-center items-center gap-4">
               <div className="flex flex-wrap justify-center items-center gap-3">
-                <div className="rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
+                <div className="tool-card rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
                   <FallbackComponent className="size-6 text-[#a1a1a1]" />
                   <span className="text-[#a1a1a1] text-xs leading-4">
                     GitHub
                   </span>
                 </div>
                 <Plus className="size-4 text-[#a1a1a1]" />
-                <div className="rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
+                <div className="tool-card rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
                   <Video className="size-6 text-[#a1a1a1]" />
                   <span className="text-[#a1a1a1] text-xs leading-4">
                     Google Meet
                   </span>
                 </div>
                 <Plus className="size-4 text-[#a1a1a1]" />
-                <div className="rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
+                <div className="tool-card rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
                   <FallbackComponent className="size-6 text-[#a1a1a1]" />
                   <span className="text-[#a1a1a1] text-xs leading-4">Jira</span>
                 </div>
                 <Plus className="size-4 text-[#a1a1a1]" />
-                <div className="rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
+                <div className="tool-card rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
                   <NotebookPen className="size-6 text-[#a1a1a1]" />
                   <span className="text-[#a1a1a1] text-xs leading-4">
                     Notion
                   </span>
                 </div>
                 <Plus className="size-4 text-[#a1a1a1]" />
-                <div className="rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
+                <div className="tool-card rounded-xl bg-neutral-950 border-white/10 border-1 border-solid flex p-4 flex-col items-center gap-2">
                   <LayoutDashboard className="size-6 text-[#a1a1a1]" />
                   <span className="text-[#a1a1a1] text-xs leading-4">
                     Deploys
@@ -390,14 +423,14 @@ export default function Landing() {
             </div>
             <div className="flex mt-8 justify-center items-center">
               <div className="flex flex-col items-center gap-2">
-                <ArrowDown className="size-5 text-[#00bc7d]" />
+                <ArrowDown className="overview-arrow size-5 text-[#00bc7d]" />
                 <span className="text-[#a1a1a1] text-xs leading-4">
                   Unified into
                 </span>
               </div>
             </div>
             <div className="flex mt-8 justify-center">
-              <div className="rounded-2xl bg-neutral-200/10 border-neutral-200/30 border-1 border-solid flex flex-col sm:flex-row px-6 sm:px-8 lg:px-12 py-6 items-center gap-4 text-center sm:text-left w-full max-w-2xl">
+              <div className="devsphere-card rounded-2xl bg-neutral-200/10 border-neutral-200/30 border-1 border-solid flex flex-col sm:flex-row px-6 sm:px-8 lg:px-12 py-6 items-center gap-4 text-center sm:text-left w-full max-w-2xl">
                 <div className="size-12 rounded-xl bg-neutral-200 text-neutral-900 flex justify-center items-center">
                   <Hexagon className="size-6" />
                 </div>
@@ -432,14 +465,19 @@ export default function Landing() {
                 <span className="font-medium text-neutral-50 text-xs leading-4 tracking-tight">
                   Open Source
                 </span>
-                <a className="rounded-lg bg-neutral-950 text-neutral-50 text-sm leading-5 border-white/10 border-1 border-solid flex px-4 py-2 items-center gap-2">
+                <a
+                 href="https://github.com/KARTIKK023"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="rounded-lg bg-neutral-950 text-neutral-50 text-sm leading-5 border-white/10 border-1 border-solid flex px-4 py-2 items-center gap-2 hover:bg-neutral-800 transition-colors"
+                >
                   <FallbackComponent className="size-4" />
                   View source on GitHub
                   <ExternalLink className="size-3.5 text-[#a1a1a1]" />
                 </a>
                 <a className="text-[#a1a1a1] text-xs leading-4 flex items-center gap-1.5">
                   <GitBranch className="size-3.5" />
-                  github.com/kartikchaudhary/devsphere
+                  github.com/KARTIKK023/DevCP
                 </a>
               </div>
             </div>

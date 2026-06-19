@@ -1,3 +1,4 @@
+import { MouseGlow } from "@/components/effects";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -67,6 +68,7 @@ export default function Login() {
 
   return (
     <div className="bg-neutral-950 text-neutral-50 min-h-dvh w-full overflow-x-hidden">
+      <MouseGlow />
       <AuthToast message={toast.message} type={toast.type} />
       <div className="min-h-dvh flex flex-col lg:flex-row w-full">
         <div className="w-full lg:w-[45%] border-white/10 lg:border-r flex flex-col justify-between p-6 sm:p-8 lg:p-12 gap-8 min-h-dvh lg:min-h-0">

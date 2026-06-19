@@ -1,3 +1,4 @@
+import { MouseGlow } from "@/components/effects";
 import {
   CheckCircle2,
   ChevronRight,
@@ -32,6 +33,7 @@ export default function Dashboard() {
   return (
     <>
 <section className="flex flex-col gap-4">
+  <MouseGlow />
                 <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
                   <div className="flex flex-col gap-1">
                     <h2 className="font-semibold text-base leading-6 tracking-tight">

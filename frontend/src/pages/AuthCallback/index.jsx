@@ -1,3 +1,4 @@
+import { MouseGlow } from "@/components/effects";
 import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -37,6 +38,7 @@ export default function AuthCallback() {
 
   return (
     <div className="min-h-dvh bg-neutral-950 text-neutral-50 flex items-center justify-center">
+      <MouseGlow />
       <AuthToast message={toast.message} type={toast.type} />
       <div className="flex flex-col items-center gap-3">
         <Loader className="size-6 animate-spin text-[#a1a1a1]" />

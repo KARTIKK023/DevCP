@@ -1,3 +1,4 @@
+import { MouseGlow } from "@/components/effects";
 import { AlertTriangle, LogOut, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ export default function Settings() {
   return (
     <>
       <div className="min-h-0 flex flex-1 flex-col md:flex-row min-w-0">
+        <MouseGlow />
         <nav className="shrink-0 bg-neutral-900 border-white/10 md:border-r flex p-3 sm:p-4 flex-row md:flex-col gap-1 w-full md:w-48 overflow-x-auto md:overflow-x-visible">
           <a className="font-medium rounded-lg bg-neutral-800 text-neutral-50 text-sm leading-5 px-3 py-2 whitespace-nowrap shrink-0">
             Profile

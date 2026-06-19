@@ -1,3 +1,4 @@
+import { MouseGlow } from "@/components/effects";
 import {
   ChevronDown,
   Clock,
@@ -28,6 +29,7 @@ export default function Repositories() {
   return (
     <>
 <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
+  <MouseGlow />
                 <div className="flex flex-col gap-1">
                   <h2 className="font-semibold text-base leading-6 tracking-tight">
                     All repositories
