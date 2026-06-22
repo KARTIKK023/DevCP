@@ -55,19 +55,19 @@ export default function MouseGlow() {
       aria-hidden="true"
     >
       <div
-        className="
-          h-[550px]
-          w-[550px]
-          -translate-x-1/2
-          -translate-y-1/2
-          rounded-full
-          bg-gradient-to-r
-          from-[#1447e6]/15
-          via-[#1447e6]/10
-          to-[#00bc7d]/10
-          blur-[140px]
-        "
-      />
+       className="
+        h-[550px]
+        w-[550px]
+       -translate-x-1/2
+       -translate-y-1/2
+       rounded-full
+       bg-gradient-to-r
+       from-white/10 
+       via-white/10 
+       to-white/5
+       blur-[140px]
+       "
+      />   
     </div>
   );
 }
