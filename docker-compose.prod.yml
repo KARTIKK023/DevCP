@@ -1,0 +1,42 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+    image: devsphere-backend:v1
+    container_name: backend
+
+    env_file:
+      - ./backend/.env
+
+    expose:
+      - "5001"
+
+    restart: unless-stopped
+
+    networks:
+      - devsphere
+
+
+  frontend:
+    build:
+      context: ./frontend
+
+    image: devsphere-frontend:v1
+
+    container_name: frontend
+
+    depends_on:
+      - backend
+
+    ports:
+      - "5173:80"
+
+    restart: unless-stopped
+
+    networks:
+      - devsphere
+
+
+networks:
+  devsphere:

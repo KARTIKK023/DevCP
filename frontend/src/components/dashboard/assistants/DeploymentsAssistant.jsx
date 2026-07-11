@@ -67,7 +67,7 @@ export default function DeploymentsAssistant() {
           <Lightbulb className="size-4 text-[oklch(0.769_0.188_70.08)]" />
           <span className="font-semibold text-sm leading-5">Suggested Actions</span>
         </CardHeader>
-        <CardContent className="flex p-0 flex-col gap-2">
+        <CardContent className="flex pt-2 flex-col gap-2">
           <button
             type="button"
             className="text-left rounded-lg bg-neutral-800 text-sm leading-5 flex px-3 py-2.5 items-center gap-3"

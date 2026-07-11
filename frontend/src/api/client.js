@@ -6,7 +6,7 @@ export class ApiError extends Error {
   }
 }
 
-const API_BASE = import.meta.env.VITE_API_URL || '';
+import API_BASE from "../config/api";
 
 export function getToken() {
   return localStorage.getItem('devsphere_token');

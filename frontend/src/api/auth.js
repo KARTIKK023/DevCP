@@ -1,5 +1,5 @@
 import { apiRequest, setToken } from './client';
-const API_BASE = import.meta.env.VITE_API_URL || '';
+import API_BASE from "../config/api";
 
 export async function signup({ name, email, password }) {
   const data = await apiRequest('/api/auth/signup', {

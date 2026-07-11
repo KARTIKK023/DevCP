@@ -103,13 +103,16 @@ export default function Dashboard() {
                   <h2 className="font-semibold text-base leading-6 tracking-tight">
                     Recent repositories
                   </h2>
-                  <Button
+                  <a href="/dashboard/repositories">
+                    <Button
                     variant="ghost"
                     className="text-[#a1a1a1] text-xs leading-4 gap-1 h-8"
+                    
                   >
                     View all
                     <ChevronRight className="size-3" />
                   </Button>
+                  </a>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <Card className="bg-neutral-900 border-white/10 border-0 border-solid p-4 gap-3">
@@ -199,13 +202,16 @@ export default function Dashboard() {
                     <h2 className="font-semibold text-base leading-6 tracking-tight">
                       Recent decisions
                     </h2>
+                    <a href="/dashboard/decisions">
                     <Button
-                      variant="ghost"
-                      className="text-[#a1a1a1] text-xs leading-4 gap-1 h-8"
-                    >
-                      View all
-                      <ChevronRight className="size-3" />
-                    </Button>
+                    variant="ghost"
+                    className="text-[#a1a1a1] text-xs leading-4 gap-1 h-8"
+                    
+                  >
+                    View all
+                    <ChevronRight className="size-3" />
+                  </Button>
+                  </a>
                   </div>
                   <div className="flex flex-col gap-3">
                     <Card className="bg-neutral-900 border-white/10 border-0 border-solid p-4 gap-2">
@@ -263,13 +269,16 @@ export default function Dashboard() {
                     <h2 className="font-semibold text-base leading-6 tracking-tight">
                       Architecture boards
                     </h2>
+                    <a href="/dashboard/architecture">
                     <Button
-                      variant="ghost"
-                      className="text-[#a1a1a1] text-xs leading-4 gap-1 h-8"
-                    >
-                      View all
-                      <ChevronRight className="size-3" />
-                    </Button>
+                    variant="ghost"
+                    className="text-[#a1a1a1] text-xs leading-4 gap-1 h-8"
+                    
+                  >
+                    View all
+                    <ChevronRight className="size-3" />
+                  </Button>
+                  </a>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Card className="bg-neutral-900 border-white/10 border-0 border-solid p-0 gap-0 overflow-hidden">
@@ -330,13 +339,16 @@ export default function Dashboard() {
                   <h2 className="font-semibold text-base leading-6 tracking-tight">
                     Upcoming meetings
                   </h2>
-                  <Button
+                  <a href="/dashboard/meetings">
+                    <Button
                     variant="ghost"
                     className="text-[#a1a1a1] text-xs leading-4 gap-1 h-8"
+                    
                   >
-                    View calendar
+                    View all
                     <ChevronRight className="size-3" />
                   </Button>
+                  </a>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <Card className="bg-neutral-900 border-white/10 border-0 border-solid p-4 gap-3">

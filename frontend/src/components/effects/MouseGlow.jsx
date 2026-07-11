@@ -67,7 +67,7 @@ export default function MouseGlow() {
        to-white/5
        blur-[140px]
        "
-      />   
+    />   
     </div>
   );
 }

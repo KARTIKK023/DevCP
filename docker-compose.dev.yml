@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    image: devsphere-backend:v1
+    container_name: devsphere-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    ports:
+      - "5001:5001"
+    networks:
+      - devsphere-network
+
+  frontend:
+    build:
+      context: ./frontend
+    image: devsphere-frontend:v1
+    container_name: devsphere-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - devsphere-network
+
+networks:
+  devsphere-network:
+    driver: bridge
